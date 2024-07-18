@@ -1,0 +1,16 @@
+.desktopCapturer {
+    width: 100vw;
+    height: 100vh;
+    font-size: 0;
+    position: relative;
+}
+
+.desktopCapturer div {
+    position: absolute;
+    /* background-color: red; */
+    border: 1px solid red;
+}
+
+.desktopCapturer img {
+    -webkit-user-drag: none;
+}
