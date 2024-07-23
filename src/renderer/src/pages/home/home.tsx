@@ -24,7 +24,6 @@ const Home: FC = (): JSX.Element => {
       </div>
       <div className="home-contnet">
         <button onClick={getpp}>获取屏幕截图</button>
-        <img src={imgUrl} width={500} alt="" />
       </div>
     </>
   )

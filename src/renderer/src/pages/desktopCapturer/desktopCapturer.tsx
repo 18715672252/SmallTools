@@ -21,9 +21,14 @@ const DesktopCapturer: FC = (): JSX.Element => {
   const [mousePos, setMousePos] = React.useState<objType>(obj)
   const [moveFlag, setMoveFlag] = React.useState(false)
   const [show, setShow] = React.useState(false)
-  const img: unknown = React.useRef(null)
+  const [showFlag, setShowFlag] = React.useState(false)
+  const img = React.useRef<HTMLImageElement | null>(null)
   const ipcMainCallBack = (data: imgOptType): void => {
     setImgUrl(data.imgUrl)
+  }
+  const cancelImgCallBack = (): void => {
+    setShow(false)
+    setShowFlag(false)
   }
   const desktopCapturerMouseDown = (e: React.MouseEvent): void => {
     const { pageX, pageY } = e
@@ -35,17 +40,23 @@ const DesktopCapturer: FC = (): JSX.Element => {
     })
     setMoveFlag(true)
     setShow(false)
+    setShowFlag(false)
+    window.api.sendIpcMain('ClearDesktopCapturerWin')
+  }
+
+  const onContextMenuCancel = (): void => {
+    window.api.sendIpcMain('closeWin')
   }
 
   const desktopCapturerMouseMove = (e: React.MouseEvent): void => {
-    if (moveFlag) {
+    const { pageX, pageY } = e
+    const width = pageX - mousePos.left
+    const height = pageY - mousePos.top
+    if (moveFlag && width > 10 && height > 10) {
       if (!show) setShow(true)
-
+        // window.api.sendIpcMain('ClearDesktopCapturerWin')
       setMousePos(obj)
-      const { pageX, pageY } = e
-      console.log(pageX - mousePos.left, pageY - mousePos.top)
-      const width = pageX - mousePos.left
-      const height = pageY - mousePos.top
+
       setMousePos({
         ...mousePos,
         width,
@@ -53,31 +64,26 @@ const DesktopCapturer: FC = (): JSX.Element => {
       })
       clearTimeout(timer as NodeJS.Timeout)
       timer = setTimeout(() => {
-        const can = document.createElement('canvas')
-        const ctx = can.getContext('2d')
-        console.log(img.current)
-        can.width = mousePos.width
-        can.height = mousePos.height
-        ctx?.drawImage(
-          (img as { current: HTMLImageElement }).current,
-          mousePos.left,
-          mousePos.top,
-          mousePos.width,
-          mousePos.height,
+        const ctxDrawImageOpt = [
+          mousePos.left * 1.25,
+          mousePos.top * 1.25,
+          mousePos.width * 1.25,
+          mousePos.height * 1.25,
           0,
           0,
           mousePos.width,
           mousePos.height
-        )
-        can.toBlob(() => {
-
-        })
-        document.body.appendChild(can)
+        ]
+        // can.width = mousePos.width * 1.25
+        // can.height = mousePos.height * 1.25
         window.api.sendIpcMain('desktopCapturerWin', {
           ...mousePos,
           width,
-          height
+          height,
+          ctxDrawImageOpt,
+          imgUrl
         })
+        setShowFlag(true)
       }, 500)
     }
   }
@@ -96,6 +102,7 @@ const DesktopCapturer: FC = (): JSX.Element => {
   }, [mousePos])
   React.useEffect(() => {
     window.api.onIcpMainEvent('sendMsg', ipcMainCallBack)
+    window.api.onIcpMainEvent('cancelImg', cancelImgCallBack)
   }, [])
 
   return (
@@ -104,10 +111,12 @@ const DesktopCapturer: FC = (): JSX.Element => {
       onMouseDown={desktopCapturerMouseDown}
       onMouseMove={desktopCapturerMouseMove}
       onMouseUp={desktopCapturerMouseUp}
+      onContextMenu={onContextMenuCancel}
     >
       {/* <canvas id="can"></canvas> */}
       <img className="nodrag" src={imgUrl} ref={img} alt="" srcSet="" />
       {show && <div style={sty} className="nodrag"></div>}
+      {showFlag && <div className="mark"></div>}
     </div>
   )
 }

@@ -8,5 +8,6 @@ declare global {
   interface Window {
     electron: ElectronAPI
     api: apiType
+    screenOpt: string
   }
 }
