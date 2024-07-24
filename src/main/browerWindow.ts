@@ -30,6 +30,8 @@ class CustomerBrowerWindow {
         return true
       })
     })
+    this.win.setMaximizable(false)
+    this.win.setResizable(false)
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
       this.win.loadURL(process.env['ELECTRON_RENDERER_URL'] + '/#/' + winUrl)
     } else {

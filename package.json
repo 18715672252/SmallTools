@@ -23,6 +23,8 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
+    "antd": "^5.19.3",
+    "axios": "^1.7.2",
     "electron-updater": "^6.1.7",
     "react-router-dom": "^6.25.0",
     "react-screenshots": "^0.5.22"

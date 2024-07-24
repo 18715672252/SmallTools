@@ -1,9 +1,22 @@
-import { ipcMain, desktopCapturer, screen, app, Menu, BrowserWindow, nativeImage, clipboard } from 'electron'
+import {
+  ipcMain,
+  desktopCapturer,
+  screen,
+  app,
+  Menu,
+  BrowserWindow,
+  nativeImage,
+  clipboard,
+  net,
+  Notification
+} from 'electron'
 import CustomerBrowerWindow from './browerWindow'
+import fs from 'fs'
 let desktopCapturerSize: undefined | Electron.Size
 let desktopCapturerWin
 let showDesktopCapturerWin
 let screenSize: Electron.Rectangle
+let notice: Notification
 app.whenReady().then(() => {
   // const screenSize = screen.getPrimaryDisplay().size
   screenSize = screen.getPrimaryDisplay().bounds
@@ -123,4 +136,32 @@ ipcMain.handle('copyCapturerImg', (_ev, { blob }) => {
 ipcMain.handle('minmaxWin', (ev) => {
   const win = BrowserWindow.fromWebContents(ev.sender)
   win?.minimize()
+})
+
+ipcMain.handle('randowImg', (_event, data) => {
+  const time = Date.now()
+  const path = app.getPath('desktop')
+  const request = net.request(data)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const bufs: Array<any> = []
+  request.on('response', (response) => {
+    response.on('data', (chunk) => {
+      // console.log(chunk)
+      bufs.push(chunk)
+    })
+    response.on('end', async () => {
+      const buf = Buffer.concat(bufs)
+      await fs.promises.writeFile(`${path}/${time}.${'png'}`, buf)
+      _event.sender.send('img-download-finsh')
+      notice = new Notification({
+        title: '图片下载完成',
+        body: '图片已经保存到桌面',
+        // icon
+      })
+      notice.show()
+      console.log('No more data in response.')
+    })
+  })
+  request.end()
+  return undefined
 })

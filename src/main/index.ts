@@ -10,11 +10,14 @@ function createWindow(): void {
     height: 180,
     show: false,
     frame: false,
+    maximizable: false,
+    resizable: false,
     ...(process.platform === 'linux' ? { icon } : {}),
     backgroundColor: '#f5f8ff',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      allowRunningInsecureContent: true
     }
   })
 
