@@ -11,6 +11,7 @@ import {
   Notification
 } from 'electron'
 import CustomerBrowerWindow from './browerWindow'
+import icon from '../../resources/appIcon.png?asset'
 import fs from 'fs'
 let desktopCapturerSize: undefined | Electron.Size
 let desktopCapturerWin
@@ -139,7 +140,12 @@ ipcMain.handle('minmaxWin', (ev) => {
   win?.minimize()
 })
 
-ipcMain.handle('randowImg', (_event, data) => {
+ipcMain.handle('randowImg', async (_event, data) => {
+  let p1: (value?: unknown) => void
+  const p = new Promise((re) => {
+    p1 = re
+  })
+
   const time = Date.now()
   const path = app.getPath('desktop')
   const request = net.request(data)
@@ -157,12 +163,14 @@ ipcMain.handle('randowImg', (_event, data) => {
       notice = new Notification({
         title: '图片下载完成',
         body: '图片已经保存到桌面',
-        // icon
+        icon
       })
       notice.show()
+      p1()
       console.log('No more data in response.')
     })
   })
   request.end()
+  await p
   return undefined
 })
