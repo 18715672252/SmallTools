@@ -2,5 +2,84 @@
     font-size: 0;
     padding: 2px;
     background-color: #5b89fe;
+    position: relative;
 
+}
+
+
+.desktopCapturer-win .home-header {
+    height: 30px;
+    border-bottom: 1px solid #eaebf2;
+    display: flex;
+    width: calc(100% - 4px);
+    align-items: center;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: white;
+
+}
+
+.desktopCapturer-win .setting {
+    margin-left: auto;
+    cursor: pointer;
+}
+.desktopCapturer-win .pin {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.desktopCapturer-win .pin img {
+    width: 16px;
+    height: 16px;
+    margin:  auto;
+}
+
+.desktopCapturer-win .close {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    cursor: pointer;
+}
+
+.desktopCapturer-win .close:hover {
+
+    background-color: #e46855;
+    
+}
+
+.desktopCapturer-win .close img {
+    margin:  auto;
+}
+
+.desktopCapturer-win .min {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    cursor: pointer;
+    /* margin-left: auto; */
+}
+
+.desktopCapturer-win .min:hover, .desktopCapturer-win .pin:hover {
+    background-color: #e7e7e7;
+}
+
+.desktopCapturer-win .min::after {
+    content: " ";
+    width: 14px;
+    height: 1px;
+    background-color: #7c7c7f;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.desktopCapturer-win .br {
+    height: 50%;
+    width: 1px;
+    background-color: #e2e2e2;
 }

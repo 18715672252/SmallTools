@@ -1,48 +1,48 @@
-.home-header {
+.home .home-header {
     height: 30px;
     border-bottom: 1px solid #eaebf2;
     display: flex;
     align-items: center;
 }
 
-.setting {
+.home .setting {
     margin-left: auto;
     cursor: pointer;
 }
-.pin {
+.home .pin {
     margin: 0 16px;
     cursor: pointer;
 }
 
-.close {
+.home .close {
     width: 30px;
     height: 30px;
     display: flex;
     cursor: pointer;
 }
 
-.close:hover {
+.home .close:hover {
 
     background-color: #e46855;
     
 }
 
-.close img {
+.home .close img {
     margin:  auto;
 }
 
-.min {
+.home .min {
     width: 30px;
     height: 30px;
     position: relative;
     cursor: pointer;
 }
 
-.min:hover {
+.home .min:hover {
     background-color: #e7e7e7;
 }
 
-.min::after {
+.home .min::after {
     content: " ";
     width: 14px;
     height: 1px;
@@ -53,7 +53,7 @@
     transform: translate(-50%, -50%);
 }
 
-.br {
+.home .br {
     height: 50%;
     width: 1px;
     background-color: #e2e2e2;

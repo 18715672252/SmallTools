@@ -112,14 +112,15 @@ ipcMain.handle('closeWin', (ev) => {
 ipcMain.handle('pinWin', (ev) => {
   const win = BrowserWindow.fromWebContents(ev.sender)
   win?.setAlwaysOnTop(!win?.isAlwaysOnTop())
-  if (desktopCapturerWin) {
-    desktopCapturerWin.closeWin()
-    desktopCapturerWin = null
-  }
 })
 
 ipcMain.handle('copyCapturerImg', (_ev, { blob }) => {
   const buffer = Buffer.from(blob)
   const img = nativeImage.createFromBuffer(buffer)
   clipboard.writeImage(img)
+})
+
+ipcMain.handle('minmaxWin', (ev) => {
+  const win = BrowserWindow.fromWebContents(ev.sender)
+  win?.minimize()
 })
