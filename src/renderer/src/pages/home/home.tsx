@@ -4,6 +4,7 @@ import pin from '../../img/pin.png'
 import close from '../../img/close.png'
 import shotSel from '../../img/shotSelWhite.png'
 import rondom from '../../img/rondom.png'
+import screenrecording from '../../img/screenrecording.png'
 import './home.css'
 import ModalCust from '@renderer/components/modal'
 import axios from 'axios'
@@ -52,6 +53,9 @@ const Home: FC = (): JSX.Element => {
         </div>
         <div title="随机图片" onClick={rondomImg}>
           <img src={rondom} alt="" />
+        </div>
+        <div title="屏幕录制" onClick={rondomImg}>
+          <img src={screenrecording} alt="" />
         </div>
       </div>
     </div>

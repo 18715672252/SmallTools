@@ -1,7 +1,7 @@
 import { BrowserWindow } from 'electron'
 import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import icon from '../../resources/appIcon.png?asset'
 class CustomerBrowerWindow {
   options: Electron.BrowserWindowConstructorOptions
   win: BrowserWindow | null
@@ -11,6 +11,7 @@ class CustomerBrowerWindow {
     this.defaultOpt = {
       ...(process.platform === 'linux' ? { icon } : {}),
       backgroundColor: '#f5f8ff',
+      icon,
       webPreferences: {
         preload: join(__dirname, '../preload/index.js'),
         sandbox: false

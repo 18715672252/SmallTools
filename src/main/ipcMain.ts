@@ -64,7 +64,8 @@ ipcMain.handle('desktopCapturerWin', async (_ev, { x, y, width, height, blob }) 
       width: width,
       height: height,
       transparent: true,
-      alwaysOnTop: true
+      alwaysOnTop: true,
+      title: '截图'
       //   fullscreen: true
     },
     'desktopCapturerWin'

@@ -1,18 +1,19 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import icon from '../../resources/appIcon.png?asset'
 import './ipcMain'
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
+    title: '工具栏',
     width: 400,
     height: 180,
     show: false,
     frame: false,
     maximizable: false,
     resizable: false,
-    ...(process.platform === 'linux' ? { icon } : {}),
+    icon,
     backgroundColor: '#f5f8ff',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
