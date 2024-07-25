@@ -6,11 +6,12 @@ import shotSel from '../../img/shotSelWhite.png'
 import rondom from '../../img/rondom.png'
 import rondomoffline from '../../img/rondomoffline.png'
 import screenrecording from '../../img/screenrecording.png'
+import camera from '../../img/camera.png'
 import encode from '../../img/encode.png'
 import { winAction } from '../../../../types/type'
-import './home.css'
 import ModalCust from '@renderer/components/modal'
 import axios from 'axios'
+import './home.css'
 const Home: FC = (): JSX.Element => {
   const [imgW, setImgW] = React.useState(10)
   const [imgH, setImgH] = React.useState(10)
@@ -78,11 +79,14 @@ const Home: FC = (): JSX.Element => {
         <div title={netStatus ? '随机图片' : '网络已断开'} onClick={rondomImg}>
           {netStatus ? <img src={rondom} alt="" /> : <img src={rondomoffline} alt="" />}
         </div>
-        <div title="屏幕录制" onClick={rondomImg}>
+        <div title="屏幕录制">
           <img src={screenrecording} alt="" />
         </div>
-        <div title="视频转码" onClick={rondomImg}>
+        <div title="视频转码">
           <img src={encode} alt="" />
+        </div>
+        <div title="前置摄像头">
+          <img src={camera} alt="" />
         </div>
       </div>
     </div>
