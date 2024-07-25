@@ -14,6 +14,7 @@ const ReactScreenshots: FC = () => {
   const ipcMainCallBack = (data: imgOptType): void => {
     setImgUrl(data.imgUrl)
   }
+  const domref = React.useRef<HTMLDivElement | null>(null)
   const onSave = useCallback((blob: Blob, bounds: Bounds) => {
     blob.arrayBuffer().then((bf) => {
       window.api.sendIpcMain('desktopCapturerWin', { blob: bf, ...bounds })
@@ -31,19 +32,27 @@ const ReactScreenshots: FC = () => {
   }, [])
   useEffect(() => {
     window.api.onIcpMainEvent('sendMsg', ipcMainCallBack)
+    domref.current!.onclick = (e): void => {
+      // console.log(((e.target as HTMLElement).className.includes('screenshots-background-mask'))
+      if ((e.target as HTMLElement).className.includes('screenshots-background-mask')) {
+        window.api.sendIpcMain('closeWin')
+      }
+    }
   }, [])
   return (
-    <Screenshots
-      url={imgUrl}
-      width={window.innerWidth}
-      height={window.innerHeight}
-      onSave={onSave}
-      onCancel={onCancel}
-      onOk={onOk}
-      lang={{
-        operation_redo_title: '钉一下'
-      }}
-    />
+    <div ref={domref}>
+      <Screenshots
+        url={imgUrl}
+        width={window.innerWidth}
+        height={window.innerHeight}
+        onSave={onSave}
+        onCancel={onCancel}
+        onOk={onOk}
+        lang={{
+          operation_redo_title: '钉一下'
+        }}
+      />
+    </div>
   )
 }
 
