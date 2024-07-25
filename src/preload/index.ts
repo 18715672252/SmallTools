@@ -1,9 +1,9 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import { imgOptType } from '../types/type'
+import { imgOptType, ipcMainEvent } from '../types/type'
 // Custom APIs for renderer
 const api = {
-  sendIpcMain(eventType: string, data?: unknown): Promise<unknown> {
+  sendIpcMain(eventType: ipcMainEvent, data?: unknown): Promise<unknown> {
     return ipcRenderer.invoke(eventType, data)
   },
   onIcpMainEvent(eventType: string, cb: (arg: imgOptType) => void): void {
