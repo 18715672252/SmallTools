@@ -11,6 +11,8 @@ import encode from '../../img/encode.png'
 import { winAction } from '../../../../types/type'
 import ModalCust from '@renderer/components/modal'
 import axios from 'axios'
+import { setLocalStorage } from '../../../../utils'
+import { Context } from '../../App'
 import './home.css'
 const Home: FC = (): JSX.Element => {
   const [imgW, setImgW] = React.useState(10)
@@ -18,6 +20,7 @@ const Home: FC = (): JSX.Element => {
   const [isModalOpen, setIsModalOpen] = React.useState(false)
   const [loading, setLoding] = React.useState(false)
   const [netStatus, setNetStatus] = React.useState(true)
+  const store = React.useContext(Context)
   const getpp = (): void => {
     // router('/setting')
     window.api.sendIpcMain('desktopCapturer')
@@ -44,6 +47,41 @@ const Home: FC = (): JSX.Element => {
       return false
     }
   }
+
+  const screenrecordingEv = async (): Promise<unknown> => {
+    console.log(123)
+    window.api.sendIpcMain('startRecord')
+    // console.log(navigator.mediaDevices.getDisplayMedia, navigator.mediaDevices.getUserMedia)
+    // const stream = await navigator.mediaDevices.getDisplayMedia({
+    //   video: true
+    // })
+    // const mime = MediaRecorder.isTypeSupported('video/webm; codes=vp9')
+    //   ? 'video/webm; codes=vp9'
+    //   : 'video/webm'
+
+    // const mediaRecorder = new MediaRecorder(stream, {
+    //   mimeType: mime
+    // })
+    // const chunks: Array<Blob> = []
+    // mediaRecorder.addEventListener('dataavailable', (e) => {
+    //   chunks.push(e.data)
+    // })
+    // mediaRecorder.addEventListener('stop', async () => {
+    //   const blob = new Blob(chunks, { type: chunks[0].type })
+    //   const buffer = await blob.arrayBuffer()
+    //   window.api.sendIpcMain('stopRecord', { data: buffer })
+    // })
+    // mediaRecorder.start()
+    // window.api.sendIpcMain('startRecord')
+    setLocalStorage('store', { recordStatus: 'start' })
+    setTimeout(() => {
+      setLocalStorage('store', { recordStatus: 'progress' })
+    }, 5000)
+    // setTimeout(() => {
+    //   mediaRecorder.stop()
+    // }, 10000)
+    return 1
+  }
   React.useEffect(() => {
     window.addEventListener('online', function () {
       setNetStatus(true)
@@ -53,6 +91,12 @@ const Home: FC = (): JSX.Element => {
       setNetStatus(false)
     })
   }, [])
+
+  React.useEffect(() => {
+    if (store.recordStatus === 'end') {
+      mediaRecorder.stop()
+    }
+  }, [store.recordStatus])
   return (
     <div className="home">
       <ModalCust
@@ -79,7 +123,7 @@ const Home: FC = (): JSX.Element => {
         <div title={netStatus ? '随机图片' : '网络已断开'} onClick={rondomImg}>
           {netStatus ? <img src={rondom} alt="" /> : <img src={rondomoffline} alt="" />}
         </div>
-        <div title="屏幕录制">
+        <div title="屏幕录制" onClick={() => screenrecordingEv()}>
           <img src={screenrecording} alt="" />
         </div>
         <div title="视频转码">

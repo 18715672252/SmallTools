@@ -33,6 +33,10 @@ class CustomerBrowerWindow {
     })
     this.win.setMaximizable(false)
     this.win.setResizable(false)
+    // 管理win的map对象
+    global.winMap = {
+      [this.win.id]: this
+    }
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
       this.win.loadURL(process.env['ELECTRON_RENDERER_URL'] + '/#/' + winUrl)
     } else {
@@ -59,6 +63,18 @@ class CustomerBrowerWindow {
 
   getVm(): BrowserWindow {
     return this.win as BrowserWindow
+  }
+
+  getWinId(): number {
+    return this.win?.id as number
+  }
+
+  hideWinOutside({ x, y }): void {
+    console.log(this.options)
+    x = x || this.options.x
+    y = y || this.options.y
+    console.log(y)
+    this.win!.setPosition(x, y)
   }
 }
 

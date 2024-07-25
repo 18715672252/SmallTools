@@ -174,3 +174,42 @@ ipcMain.handle('randowImg', async (_event, data) => {
   await p
   return undefined
 })
+
+ipcMain.handle('stopRecord', (_ev) => {
+  
+})
+
+ipcMain.handle('startRecord', (_ev) => {
+  console.log(999)
+  const recordWinID = new CustomerBrowerWindow(
+    {
+      frame: false,
+      show: false,
+      resizable: false,
+      x: screenSize.width / 2 - 60,
+      y: 0,
+      width: 120,
+      height: 60,
+      transparent: true,
+      alwaysOnTop: true,
+      title: '录制'
+      //   fullscreen: true
+    },
+    'recording'
+  ).getWinId()
+  console.log(global.winMap[recordWinID].options)
+  setTimeout(() => {
+    global.winMap[recordWinID].hideWinOutside({ y: -52 })
+  }, 3000)
+})
+
+ipcMain.handle('recordWinMouseenter', (event) => {
+  const id = BrowserWindow.fromWebContents(event.sender)!.id
+  global.winMap[id].hideWinOutside({ y: 0 })
+})
+ipcMain.handle('recordWinMouseLeave', (event) => {
+  setTimeout(() => {
+    const id = BrowserWindow.fromWebContents(event.sender)!.id
+    global.winMap[id].hideWinOutside({ y: -52 })
+  }, 2000)
+})

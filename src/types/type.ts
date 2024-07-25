@@ -11,6 +11,10 @@ export type imgOptType = {
 
 export type winAction = 'minmax' | 'closeWin'
 
+export interface obj {
+  [propsName: string]: unknown
+}
+
 export type ipcMainEvent =
   | 'desktopCapturer'
   | 'desktopCapturerWin'
@@ -24,3 +28,11 @@ export type ipcMainEvent =
   | 'copyCapturerImg'
   | 'minmaxWin'
   | 'randowImg'
+  | 'startRecord'
+  | 'stopRecord'
+  | 'recordWinMouseenter'
+  | 'recordWinMouseLeave'
+
+export type initStore = {
+  recordStatus?: 'start' | 'progress' | 'end' | 'init'
+}
