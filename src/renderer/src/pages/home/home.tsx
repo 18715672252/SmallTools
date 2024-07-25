@@ -6,6 +6,8 @@ import shotSel from '../../img/shotSelWhite.png'
 import rondom from '../../img/rondom.png'
 import rondomoffline from '../../img/rondomoffline.png'
 import screenrecording from '../../img/screenrecording.png'
+import encode from '../../img/encode.png'
+import { winAction } from '../../../../types/type'
 import './home.css'
 import ModalCust from '@renderer/components/modal'
 import axios from 'axios'
@@ -29,7 +31,17 @@ const Home: FC = (): JSX.Element => {
     // return window.api.invoke('download-img', res.request.responseURL)
     await window.api.sendIpcMain('randowImg', res.request.responseURL)
     setLoding(false)
-    return 1
+    return true
+  }
+  const winAction = (type: winAction): void | boolean => {
+    if (type === 'closeWin') {
+      window.api.sendIpcMain('closeWin')
+      return false
+    }
+    if (type === 'minmax') {
+      window.api.sendIpcMain('minmaxWin')
+      return false
+    }
   }
   React.useEffect(() => {
     window.addEventListener('online', function () {
@@ -54,8 +66,8 @@ const Home: FC = (): JSX.Element => {
         <img className="setting nodrag " src={setting} width={16} alt="" />
         <img className="pin nodrag" src={pin} width={16} alt="" />
         <div className="br"></div>
-        <div className="min comApp nodrag"></div>
-        <div className="close comApp nodrag">
+        <div className="min comApp nodrag" onClick={() => winAction('minmax')}></div>
+        <div className="close comApp nodrag" onClick={() => winAction('closeWin')}>
           <img src={close} width={16} alt="" />
         </div>
       </div>
@@ -68,6 +80,9 @@ const Home: FC = (): JSX.Element => {
         </div>
         <div title="屏幕录制" onClick={rondomImg}>
           <img src={screenrecording} alt="" />
+        </div>
+        <div title="视频转码" onClick={rondomImg}>
+          <img src={encode} alt="" />
         </div>
       </div>
     </div>
