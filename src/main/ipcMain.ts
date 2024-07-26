@@ -63,7 +63,7 @@ ipcMain.handle('desktopCapturerWin', async (_ev, { x, y, width, height, blob }) 
       x,
       y,
       width: width,
-      height: height,
+      height: height + 30,
       transparent: true,
       alwaysOnTop: true,
       title: '截图'
@@ -182,10 +182,12 @@ ipcMain.handle('stopRecord', (_event, { data }) => {
   const buffer = Buffer.from(data)
   const path = app.getPath('desktop')
   const time = Date.now()
-  fs.promises.writeFile(`${path}/${time}.${'tmp'}`, buffer)
+  fs.promises.writeFile(`${path}/${time}.${'webm'}`, buffer)
 })
 
 ipcMain.handle('startRecord', () => {
+  const mainWin = global.winMap.mainWindow
+
   const recordWinID = new CustomerBrowerWindow(
     {
       frame: false,
@@ -197,7 +199,8 @@ ipcMain.handle('startRecord', () => {
       height: 60,
       transparent: true,
       alwaysOnTop: true,
-      title: '录制'
+      title: '录制',
+      parent: mainWin
       //   fullscreen: true
     },
     'recording'
