@@ -17,7 +17,7 @@ function createWindow(): void {
     backgroundColor: '#f5f8ff',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false,
+      sandbox: false
       // allowRunningInsecureContent: true
     }
   })
@@ -25,12 +25,15 @@ function createWindow(): void {
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
-
+  global.winMap
+      ? (global.winMap['mainWindow'] = mainWindow)
+      : (global.winMap = { ['mainWindow']: mainWindow })
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
 
+  // global.winMap['mainWindow'] = mainWindow
   mainWindow.webContents.session.setDisplayMediaRequestHandler((_request, callback): void => {
     desktopCapturer.getSources({ types: ['screen'] }).then((sources) => {
       // Grant access to the first screen found.
