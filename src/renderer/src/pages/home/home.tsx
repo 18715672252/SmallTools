@@ -14,6 +14,7 @@ import axios from 'axios'
 import { setLocalStorage } from '../../../../utils'
 import { Context } from '../../App'
 import './home.css'
+let mediaRecorder: MediaRecorder | null
 const Home: FC = (): JSX.Element => {
   const [imgW, setImgW] = React.useState(10)
   const [imgH, setImgH] = React.useState(10)
@@ -49,37 +50,29 @@ const Home: FC = (): JSX.Element => {
   }
 
   const screenrecordingEv = async (): Promise<unknown> => {
-    console.log(123)
-    window.api.sendIpcMain('startRecord')
-    // console.log(navigator.mediaDevices.getDisplayMedia, navigator.mediaDevices.getUserMedia)
-    // const stream = await navigator.mediaDevices.getDisplayMedia({
-    //   video: true
-    // })
-    // const mime = MediaRecorder.isTypeSupported('video/webm; codes=vp9')
-    //   ? 'video/webm; codes=vp9'
-    //   : 'video/webm'
-
-    // const mediaRecorder = new MediaRecorder(stream, {
-    //   mimeType: mime
-    // })
-    // const chunks: Array<Blob> = []
-    // mediaRecorder.addEventListener('dataavailable', (e) => {
-    //   chunks.push(e.data)
-    // })
-    // mediaRecorder.addEventListener('stop', async () => {
-    //   const blob = new Blob(chunks, { type: chunks[0].type })
-    //   const buffer = await blob.arrayBuffer()
-    //   window.api.sendIpcMain('stopRecord', { data: buffer })
-    // })
-    // mediaRecorder.start()
-    // window.api.sendIpcMain('startRecord')
     setLocalStorage('store', { recordStatus: 'start' })
-    setTimeout(() => {
-      setLocalStorage('store', { recordStatus: 'progress' })
-    }, 5000)
-    // setTimeout(() => {
-    //   mediaRecorder.stop()
-    // }, 10000)
+    window.api.sendIpcMain('startRecord')
+    const stream = await navigator.mediaDevices.getDisplayMedia({
+      video: true
+    })
+    const mime = MediaRecorder.isTypeSupported('video/webm; codes=vp9')
+      ? 'video/webm; codes=vp9'
+      : 'video/webm'
+
+    mediaRecorder = new MediaRecorder(stream, {
+      mimeType: mime
+    })
+    const chunks: Array<Blob> = []
+    mediaRecorder.addEventListener('dataavailable', async (e) => {
+      chunks.push(e.data)
+    })
+    mediaRecorder.addEventListener('stop', async () => {
+      const blob = new Blob(chunks, { type: chunks[0].type })
+      const buffer = await blob.arrayBuffer()
+      window.api.sendIpcMain('stopRecord', { data: buffer })
+    })
+    mediaRecorder.start(1000)
+    setLocalStorage('store', { recordStatus: 'progress' })
     return 1
   }
   React.useEffect(() => {
@@ -90,11 +83,16 @@ const Home: FC = (): JSX.Element => {
     window.addEventListener('offline', function () {
       setNetStatus(false)
     })
-  }, [])
 
+    window.api.onIcpMainEvent('recordEnd', () => {
+      setLocalStorage('store', { recordStatus: 'end' })
+    })
+  }, [])
   React.useEffect(() => {
+    console.log(store, 'store')
     if (store.recordStatus === 'end') {
-      mediaRecorder.stop()
+      mediaRecorder!.stop()
+      // mediaRecorder = null
     }
   }, [store.recordStatus])
   return (

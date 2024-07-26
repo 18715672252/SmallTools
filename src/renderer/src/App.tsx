@@ -7,7 +7,7 @@ import ReactScreenshots from './pages/reactScreenshots/reactScreenshots'
 import { getLocalStorage, parseObject } from '../../utils'
 import { initStore } from '../../types/type'
 import Recording from './pages/recording/recording'
-export const Context = React.createContext<initStore>({ recordStatus: 'end' })
+export const Context = React.createContext<initStore>({ recordStatus: 'start' })
 function App(): JSX.Element {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
   const [store, setStore] = useState<initStore>(() => getLocalStorage('store'))

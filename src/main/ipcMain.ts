@@ -121,6 +121,8 @@ ipcMain.handle('cancelImg', () => {
 
 ipcMain.handle('closeWin', (ev) => {
   const win = BrowserWindow.fromWebContents(ev.sender)
+  const mainWin = global.winMap.mainWindow
+  mainWin.webContents.send('recordEnd', 'end')
   win?.destroy()
 })
 
@@ -175,12 +177,15 @@ ipcMain.handle('randowImg', async (_event, data) => {
   return undefined
 })
 
-ipcMain.handle('stopRecord', (_ev) => {
-  
+// 停止录制，并下载时评
+ipcMain.handle('stopRecord', (_event, { data }) => {
+  const buffer = Buffer.from(data)
+  const path = app.getPath('desktop')
+  const time = Date.now()
+  fs.promises.writeFile(`${path}/${time}.${'tmp'}`, buffer)
 })
 
-ipcMain.handle('startRecord', (_ev) => {
-  console.log(999)
+ipcMain.handle('startRecord', () => {
   const recordWinID = new CustomerBrowerWindow(
     {
       frame: false,
@@ -197,7 +202,6 @@ ipcMain.handle('startRecord', (_ev) => {
     },
     'recording'
   ).getWinId()
-  console.log(global.winMap[recordWinID].options)
   setTimeout(() => {
     global.winMap[recordWinID].hideWinOutside({ y: -52 })
   }, 3000)

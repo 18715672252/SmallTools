@@ -18,9 +18,9 @@ const Recording: FC = (): JSX.Element => {
       window.api.sendIpcMain('recordWinMouseLeave')
     }
     setInterval(() => {
-      console.log(123)
       setSec((preSec) => preSec + 1)
     }, 1000)
+    
   }, [])
   return (
     <div className="record">
