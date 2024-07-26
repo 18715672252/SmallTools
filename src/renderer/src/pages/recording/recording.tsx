@@ -20,7 +20,6 @@ const Recording: FC = (): JSX.Element => {
     setInterval(() => {
       setSec((preSec) => preSec + 1)
     }, 1000)
-    
   }, [])
   return (
     <div className="record">

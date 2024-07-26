@@ -86,15 +86,11 @@ const Home: FC = (): JSX.Element => {
 
     window.api.onIcpMainEvent('recordEnd', () => {
       setLocalStorage('store', { recordStatus: 'end' })
+      mediaRecorder!.stop()
+      mediaRecorder = null
+      setLocalStorage('store', { recordStatus: 'start' })
     })
   }, [])
-  React.useEffect(() => {
-    console.log(store, 'store')
-    if (store.recordStatus === 'end') {
-      mediaRecorder!.stop()
-      // mediaRecorder = null
-    }
-  }, [store.recordStatus])
   return (
     <div className="home">
       <ModalCust

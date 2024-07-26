@@ -12,6 +12,7 @@ html, body {
 }
 .record img {
     width: 30px;
+    cursor: pointer;
     
 }
 body {
