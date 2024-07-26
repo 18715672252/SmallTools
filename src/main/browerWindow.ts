@@ -34,9 +34,15 @@ class CustomerBrowerWindow {
     this.win.setMaximizable(false)
     this.win.setResizable(false)
     // 管理win的map对象
-    global.winMap = {
-      [this.win.id]: this
-    }
+    global.winMap
+      ? (global.winMap[this.win.id] = this)
+      : (global.winMap = {
+          [this.win.id]: this
+        })
+    this.win.on('closed', () => {
+      global.winMap[this.win!.id] = null
+      delete global.winMap[this.win!.id]
+    })
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
       this.win.loadURL(process.env['ELECTRON_RENDERER_URL'] + '/#/' + winUrl)
     } else {
@@ -47,12 +53,6 @@ class CustomerBrowerWindow {
   sendEventWeb(msg: string, data?: unknown): void {
     this.win?.webContents.on('dom-ready', () => {
       this.win?.webContents.send(msg, data)
-    })
-  }
-
-  setWindowOpt(data: unknown): void {
-    this.win?.webContents.on('did-finish-load', () => {
-      this.win?.webContents.executeJavaScript(`window.screenOpt=${JSON.stringify(data)}`)
     })
   }
 
@@ -70,11 +70,13 @@ class CustomerBrowerWindow {
   }
 
   hideWinOutside({ x, y }): void {
-    console.log(this.options)
     x = x || this.options.x
     y = y || this.options.y
-    console.log(y)
     this.win!.setPosition(x, y)
+  }
+
+  sendRenderEvent(eventType: string, winId: number, data?: unknown): void {
+    BrowserWindow.fromId(winId)?.webContents.send(eventType, data)
   }
 }
 
