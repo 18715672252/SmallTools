@@ -44,7 +44,7 @@ const DesktopCapturerwin: FC = (): JSX.Element => {
       <img
         src={bg}
         alt=""
-        style={{ width: 'calc(100vw - 4px)', height: 'calc(100vh - 4px)' }}
+        style={{ width: 'calc(100vw - 4px)', height: 'calc(100vh - 36px)' }}
         srcSet=""
       />
     </div>
