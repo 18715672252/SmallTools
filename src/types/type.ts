@@ -33,6 +33,8 @@ export type ipcMainEvent =
   | 'recordWinMouseenter'
   | 'recordWinMouseLeave'
   | 'imgLinishLoad'
+  | 'ignoreEvent'
+  | 'restoreEvent'
 
 export type initStore = {
   recordStatus?: 'start' | 'progress' | 'end' | 'init'

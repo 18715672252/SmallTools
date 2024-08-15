@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import setting from '../../img/setting.png'
 import pin from '../../img/pin.png'
+import pause from '../../img/pausered.png'
 import close from '../../img/close.png'
 import shotSel from '../../img/shotSelWhite.png'
 import rondom from '../../img/rondom.png'
@@ -8,11 +9,11 @@ import rondomoffline from '../../img/rondomoffline.png'
 import screenrecording from '../../img/screenrecording.png'
 import camera from '../../img/camera.png'
 import encode from '../../img/encode.png'
+import code from '../../img/code.png'
 import { winAction } from '../../../../types/type'
 import ModalCust from '@renderer/components/modal'
 import axios from 'axios'
 import { setLocalStorage } from '../../../../utils'
-import { Context } from '../../App'
 import './home.css'
 let mediaRecorder: MediaRecorder | null
 const Home: FC = (): JSX.Element => {
@@ -21,7 +22,7 @@ const Home: FC = (): JSX.Element => {
   const [isModalOpen, setIsModalOpen] = React.useState(false)
   const [loading, setLoding] = React.useState(false)
   const [netStatus, setNetStatus] = React.useState(true)
-  const store = React.useContext(Context)
+  const [recodeFlag, setRecordFlag] = React.useState(true)
   const getpp = (): void => {
     // router('/setting')
     window.api.sendIpcMain('desktopCapturer')
@@ -50,30 +51,37 @@ const Home: FC = (): JSX.Element => {
   }
 
   const screenrecordingEv = async (): Promise<unknown> => {
-    setLocalStorage('store', { recordStatus: 'start' })
-    window.api.sendIpcMain('startRecord')
-    const stream = await navigator.mediaDevices.getDisplayMedia({
-      video: true
-    })
-    const mime = MediaRecorder.isTypeSupported('video/webm; codes=vp9')
-      ? 'video/webm; codes=vp9'
-      : 'video/webm'
+    if (recodeFlag) {
+      setLocalStorage('store', { recordStatus: 'start' })
+      window.api.sendIpcMain('startRecord')
+      setRecordFlag(false)
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: true
+      })
+      const mime = MediaRecorder.isTypeSupported('video/webm; codes=vp9')
+        ? 'video/webm; codes=vp9'
+        : 'video/webm'
 
-    mediaRecorder = new MediaRecorder(stream, {
-      mimeType: mime
-    })
-    const chunks: Array<Blob> = []
-    mediaRecorder.addEventListener('dataavailable', async (e) => {
-      chunks.push(e.data)
-    })
-    mediaRecorder.addEventListener('stop', async () => {
-      const blob = new Blob(chunks, { type: chunks[0].type })
-      const buffer = await blob.arrayBuffer()
-      window.api.sendIpcMain('stopRecord', { data: buffer })
-    })
-    mediaRecorder.start(1000)
-    setLocalStorage('store', { recordStatus: 'progress' })
-    return 1
+      mediaRecorder = new MediaRecorder(stream, {
+        mimeType: mime
+      })
+      const chunks: Array<Blob> = []
+      mediaRecorder.addEventListener('dataavailable', async (e) => {
+        chunks.push(e.data)
+      })
+      mediaRecorder.addEventListener('stop', async () => {
+        const blob = new Blob(chunks, { type: chunks[0].type })
+        const buffer = await blob.arrayBuffer()
+        window.api.sendIpcMain('stopRecord', { data: buffer })
+      })
+      mediaRecorder.start(1000)
+      setLocalStorage('store', { recordStatus: 'progress' })
+    } else {
+      setRecordFlag(true)
+      setLocalStorage('store', { recordStatus: 'end' })
+      window.api.sendIpcMain('closeWin', 'recordWin')
+    }
+    return Promise.resolve()
   }
   React.useEffect(() => {
     setLocalStorage('store', { recordStatus: 'start' })
@@ -90,6 +98,7 @@ const Home: FC = (): JSX.Element => {
       mediaRecorder!.stop()
       mediaRecorder = null
       setLocalStorage('store', { recordStatus: 'start' })
+      setRecordFlag(true)
     })
   }, [])
   return (
@@ -118,8 +127,14 @@ const Home: FC = (): JSX.Element => {
         <div title={netStatus ? '随机图片' : '网络已断开'} onClick={rondomImg}>
           {netStatus ? <img src={rondom} alt="" /> : <img src={rondomoffline} alt="" />}
         </div>
-        <div title="屏幕录制" onClick={() => screenrecordingEv()}>
-          <img src={screenrecording} alt="" />
+        <div
+          title={recodeFlag ? '屏幕录制' : '录屏中，点击录制完成'}
+          onClick={() => screenrecordingEv()}
+        >
+          {recodeFlag ? <img src={screenrecording} alt="" /> : <img src={pause} alt="" />}
+        </div>
+        <div title="代码片段">
+          <img src={code} alt="" />
         </div>
         <div title="视频转码">
           <img src={encode} alt="" />

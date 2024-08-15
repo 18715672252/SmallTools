@@ -18,6 +18,7 @@ let desktopCapturerWin
 let showDesktopCapturerWin
 let screenSize: Electron.Rectangle
 let notice: Notification
+let recordWinID
 app.whenReady().then(() => {
   // const screenSize = screen.getPrimaryDisplay().size
   screenSize = screen.getPrimaryDisplay().bounds
@@ -55,7 +56,6 @@ ipcMain.handle('desktopCapturer', async () => {
 
 // 截图显示的窗口
 ipcMain.handle('desktopCapturerWin', async (_ev, { x, y, width, height, blob }) => {
-  console.log(width, height, 6666)
   showDesktopCapturerWin = new CustomerBrowerWindow(
     {
       frame: false,
@@ -121,11 +121,17 @@ ipcMain.handle('cancelImg', () => {
   webContxet.send('cancelImg')
 })
 
-ipcMain.handle('closeWin', (ev) => {
-  const win = BrowserWindow.fromWebContents(ev.sender)
-  const mainWin = global.winMap.mainWindow
-  mainWin.webContents.send('recordEnd', 'end')
-  win?.destroy()
+ipcMain.handle('closeWin', (ev, win) => {
+  if (!win) {
+    const win = BrowserWindow.fromWebContents(ev.sender)
+    win?.destroy()
+  } else {
+    if (win === 'recordWin') {
+      const mainWin = global.winMap.mainWindow
+      mainWin.webContents.send('recordEnd', 'end')
+      global.winMap[recordWinID].closeWin()
+    }
+  }
 })
 
 ipcMain.handle('pinWin', (ev) => {
@@ -188,28 +194,27 @@ ipcMain.handle('stopRecord', (_event, { data }) => {
 })
 
 ipcMain.handle('startRecord', () => {
-  const mainWin = global.winMap.mainWindow
+  // const mainWin = global.winMap.mainWindow
 
-  const recordWinID = new CustomerBrowerWindow(
+  recordWinID = new CustomerBrowerWindow(
     {
       frame: false,
       show: false,
       resizable: false,
-      x: screenSize.width / 2 - 60,
+      x: 0,
       y: 0,
-      width: 120,
-      height: 60,
+      width: screenSize.width,
+      height: screenSize.height,
       transparent: true,
       alwaysOnTop: true,
       title: '录制',
-      parent: mainWin
+      type: 'toolbar' // 工具栏窗口，在底部任务栏不显示
+      // parent: mainWin
       //   fullscreen: true
     },
     'recording'
   ).getWinId()
-  setTimeout(() => {
-    global.winMap[recordWinID].hideWinOutside({ y: -52 })
-  }, 3000)
+  global.winMap[recordWinID].win.setIgnoreMouseEvents(true)
 })
 
 ipcMain.handle('recordWinMouseenter', (event) => {
@@ -221,4 +226,14 @@ ipcMain.handle('recordWinMouseLeave', (event) => {
     const id = BrowserWindow.fromWebContents(event.sender)!.id
     global.winMap[id].hideWinOutside({ y: -52 })
   }, 2000)
+})
+
+ipcMain.handle('restoreEvent', (ev) => {
+  console.log(1)
+  BrowserWindow.fromWebContents(ev.sender)?.setIgnoreMouseEvents(false)
+})
+
+ipcMain.handle('ignoreEvent', (ev) => {
+  console.log(2)
+  BrowserWindow.fromWebContents(ev.sender)?.setIgnoreMouseEvents(true)
 })
