@@ -42,7 +42,8 @@ ipcMain.handle('desktopCapturer', async () => {
       height: screenSize.height,
       fullscreen: true,
       frame: false,
-      show: false
+      show: false,
+      transparent: true
       // resizable: false
     },
     'desktopCapturer'
@@ -54,6 +55,7 @@ ipcMain.handle('desktopCapturer', async () => {
 
 // 截图显示的窗口
 ipcMain.handle('desktopCapturerWin', async (_ev, { x, y, width, height, blob }) => {
+  console.log(width, height, 6666)
   showDesktopCapturerWin = new CustomerBrowerWindow(
     {
       frame: false,
@@ -61,9 +63,9 @@ ipcMain.handle('desktopCapturerWin', async (_ev, { x, y, width, height, blob }) 
       resizable: false,
       parent: desktopCapturerWin,
       x,
-      y,
+      y: y - 32,
       width: width,
-      height: height + 30,
+      height: height + 32,
       transparent: true,
       alwaysOnTop: true,
       title: '截图'

@@ -32,7 +32,12 @@ export type ipcMainEvent =
   | 'stopRecord'
   | 'recordWinMouseenter'
   | 'recordWinMouseLeave'
+  | 'imgLinishLoad'
 
 export type initStore = {
   recordStatus?: 'start' | 'progress' | 'end' | 'init'
+}
+
+export type customerOpt = {
+  imgWin: boolean
 }

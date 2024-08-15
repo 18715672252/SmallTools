@@ -76,6 +76,7 @@ const Home: FC = (): JSX.Element => {
     return 1
   }
   React.useEffect(() => {
+    setLocalStorage('store', { recordStatus: 'start' })
     window.addEventListener('online', function () {
       setNetStatus(true)
     })

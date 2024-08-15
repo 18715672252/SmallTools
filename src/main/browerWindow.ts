@@ -10,7 +10,7 @@ class CustomerBrowerWindow {
   constructor(options: Electron.BrowserWindowConstructorOptions = {}, winUrl: string) {
     this.defaultOpt = {
       ...(process.platform === 'linux' ? { icon } : {}),
-      backgroundColor: '#f5f8ff',
+      // backgroundColor: '#f5f8ff',
       icon,
       webPreferences: {
         preload: join(__dirname, '../preload/index.js'),

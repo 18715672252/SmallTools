@@ -38,6 +38,9 @@ const ReactScreenshots: FC = () => {
         window.api.sendIpcMain('closeWin')
       }
     }
+    domref.current!.onload = (): void => {
+      window.api.sendIpcMain('imgLinishLoad')
+    }
   }, [])
   return (
     <div ref={domref}>

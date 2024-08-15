@@ -26,8 +26,8 @@ function createWindow(): void {
     mainWindow.show()
   })
   global.winMap
-      ? (global.winMap['mainWindow'] = mainWindow)
-      : (global.winMap = { ['mainWindow']: mainWindow })
+    ? (global.winMap['mainWindow'] = mainWindow)
+    : (global.winMap = { ['mainWindow']: mainWindow })
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }

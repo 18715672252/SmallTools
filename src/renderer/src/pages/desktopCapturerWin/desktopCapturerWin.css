@@ -1,21 +1,23 @@
 .desktopCapturer-win {
     font-size: 0;
-    padding: 2px;
+    /* padding: 2px; */
     background-color: #5b89fe;
     position: relative;
-    padding-top: 34px;
+    padding-top: 32px;
+    /* padding-right: 3px; */
 }
 
 
 .desktopCapturer-win .home-header {
     height: 30px;
-    border-bottom: 1px solid #eaebf2;
+    border-bottom: 2px solid red;
     display: flex;
-    width: calc(100% - 4px);
+    width: 100%;
     align-items: center;
     position: absolute;
-    top: 2px;
-    right: 2px;
+    /* top: 2px; */
+    top: 0;
+    /* right: 3px; */
     background-color: white;
 
 }
