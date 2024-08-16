@@ -35,7 +35,8 @@ function createWindow(): void {
 
   // global.winMap['mainWindow'] = mainWindow
   mainWindow.webContents.session.setDisplayMediaRequestHandler((_request, callback): void => {
-    desktopCapturer.getSources({ types: ['screen'] }).then((sources) => {
+    desktopCapturer.getSources({ types: ['window', 'screen'] }).then((sources) => {
+      console.log(sources.length)
       // Grant access to the first screen found.
       callback({ video: sources[0], audio: 'loopback' })
     })

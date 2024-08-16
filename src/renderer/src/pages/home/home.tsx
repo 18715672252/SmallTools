@@ -77,7 +77,6 @@ const Home: FC = (): JSX.Element => {
       mediaRecorder.start(1000)
       setLocalStorage('store', { recordStatus: 'progress' })
     } else {
-      setRecordFlag(true)
       setLocalStorage('store', { recordStatus: 'end' })
       window.api.sendIpcMain('closeWin', 'recordWin')
     }
