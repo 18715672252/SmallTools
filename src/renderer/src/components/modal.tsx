@@ -29,6 +29,7 @@ const ModalCust: FC<propsC> = ({
       width={300}
       closable={false}
       footer={null}
+      maskClosable={false}
       onCancel={() => setIsModalOpen(false)}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>

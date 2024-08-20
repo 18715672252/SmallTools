@@ -1,7 +1,7 @@
 import { Routes, Route, HashRouter } from 'react-router-dom'
 import React, { useState } from 'react'
 import Home from './pages/home/home'
-import Setting from './pages/setting/setting'
+// import Setting from './pages/setting/setting'
 import DesktopCapturerwin from './pages/desktopCapturerWin/desktopCapturerWin'
 import ReactScreenshots from './pages/reactScreenshots/reactScreenshots'
 import { getLocalStorage, parseObject } from '../../utils'
@@ -22,7 +22,7 @@ function App(): JSX.Element {
         <HashRouter>
           <Routes>
             <Route path="/" element={<Home />}></Route>
-            <Route path="/setting" element={<Setting />}></Route>
+            {/* <Route path="/setting" element={<Setting />}></Route> */}
             <Route path="/desktopCapturer" element={<ReactScreenshots />} />
             <Route path="/desktopCapturerwin" element={<DesktopCapturerwin />} />
             <Route path="/recording" element={<Recording />} />

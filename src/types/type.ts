@@ -35,6 +35,7 @@ export type ipcMainEvent =
   | 'imgLinishLoad'
   | 'ignoreEvent'
   | 'restoreEvent'
+  | 'codeCopy'
 
 export type initStore = {
   recordStatus?: 'start' | 'progress' | 'end' | 'init'
