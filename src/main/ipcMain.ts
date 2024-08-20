@@ -211,6 +211,12 @@ ipcMain.handle('stopRecord', (_event, { data }) => {
   const path = app.getPath('desktop')
   const time = Date.now()
   fs.promises.writeFile(`${path}/${time}.${'webm'}`, buffer)
+  notice = new Notification({
+    title: '录制',
+    body: '视频录制完成,已保存到桌面',
+    icon
+  })
+  notice.show()
 })
 
 ipcMain.handle('startRecord', () => {
