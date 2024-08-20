@@ -155,10 +155,19 @@ ipcMain.handle('randowImg', async (_event, data) => {
   const p = new Promise((re) => {
     p1 = re
   })
-
   const time = Date.now()
   const path = app.getPath('desktop')
   const request = net.request(data)
+  const timer = setTimeout(() => {
+    p1()
+    request.abort()
+    notice = new Notification({
+      title: '下载失败-超时',
+      body: '请检查网络',
+      icon
+    })
+    notice.show()
+  }, 50000)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const bufs: Array<any> = []
   request.on('response', (response) => {
@@ -177,8 +186,19 @@ ipcMain.handle('randowImg', async (_event, data) => {
       })
       notice.show()
       p1()
+      clearTimeout(timer)
       console.log('No more data in response.')
     })
+  })
+  request.on('error', () => {
+    notice = new Notification({
+      title: '下载失败',
+      body: '请检查网络',
+      icon
+    })
+    notice.show()
+    clearTimeout(timer)
+    p1()
   })
   request.end()
   await p
@@ -229,11 +249,9 @@ ipcMain.handle('recordWinMouseLeave', (event) => {
 })
 
 ipcMain.handle('restoreEvent', (ev) => {
-  console.log(1)
   BrowserWindow.fromWebContents(ev.sender)?.setIgnoreMouseEvents(false)
 })
 
 ipcMain.handle('ignoreEvent', (ev) => {
-  console.log(2)
   BrowserWindow.fromWebContents(ev.sender)?.setIgnoreMouseEvents(true)
 })

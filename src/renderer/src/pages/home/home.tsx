@@ -7,9 +7,10 @@ import shotSel from '../../img/shotSelWhite.png'
 import rondom from '../../img/rondom.png'
 import rondomoffline from '../../img/rondomoffline.png'
 import screenrecording from '../../img/screenrecording.png'
-import camera from '../../img/camera.png'
-import encode from '../../img/encode.png'
-import code from '../../img/code.png'
+// import camera from '../../img/camera.png'
+// import encode from '../../img/encode.png'
+// import code from '../../img/code.png'
+import { message } from 'antd'
 import { winAction } from '../../../../types/type'
 import ModalCust from '@renderer/components/modal'
 import axios from 'axios'
@@ -32,9 +33,12 @@ const Home: FC = (): JSX.Element => {
     setIsModalOpen(true)
   }
   const generateImg = async (): Promise<unknown> => {
+    if (isNaN(+imgW) && isNaN(+imgH)) {
+      message.error('请输入数字')
+      return false
+    }
     setLoding(true)
     const res = await axios.get(`https://picsum.photos/${imgW}/${imgH}`)
-    // return window.api.invoke('download-img', res.request.responseURL)
     await window.api.sendIpcMain('randowImg', res.request.responseURL)
     setLoding(false)
     return true
@@ -49,6 +53,10 @@ const Home: FC = (): JSX.Element => {
       return false
     }
   }
+
+  // const codeCopy = (): void => {
+  //   window.api.sendIpcMain('codeCopy')
+  // }
 
   const screenrecordingEv = async (): Promise<unknown> => {
     if (recodeFlag) {
@@ -74,7 +82,7 @@ const Home: FC = (): JSX.Element => {
         const buffer = await blob.arrayBuffer()
         window.api.sendIpcMain('stopRecord', { data: buffer })
       })
-      mediaRecorder.start(1000)
+      mediaRecorder.start()
       setLocalStorage('store', { recordStatus: 'progress' })
     } else {
       setLocalStorage('store', { recordStatus: 'end' })
@@ -132,15 +140,15 @@ const Home: FC = (): JSX.Element => {
         >
           {recodeFlag ? <img src={screenrecording} alt="" /> : <img src={pause} alt="" />}
         </div>
-        <div title="代码片段">
+        {/* <div title="代码片段" onClick={codeCopy}>
           <img src={code} alt="" />
-        </div>
-        <div title="视频转码">
+        </div> */}
+        {/* <div title="视频转码">
           <img src={encode} alt="" />
-        </div>
-        <div title="前置摄像头">
+        </div> */}
+        {/* <div title="前置摄像头">
           <img src={camera} alt="" />
-        </div>
+        </div> */}
       </div>
     </div>
   )
