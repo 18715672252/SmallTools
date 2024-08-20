@@ -30,10 +30,15 @@ const Home: FC = (): JSX.Element => {
   }
   const rondomImg = (): void => {
     if (!netStatus) return
+    message.error('ESC键弹框消失')
     setIsModalOpen(true)
   }
   const generateImg = async (): Promise<unknown> => {
     if (isNaN(+imgW) && isNaN(+imgH)) {
+      message.error('请输入数字')
+      return false
+    }
+    if (!imgW || !imgH) {
       message.error('请输入数字')
       return false
     }
