@@ -17,7 +17,8 @@ function createWindow(): void {
     backgroundColor: '#f5f8ff',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      devTools: is.dev ? true : false
       // allowRunningInsecureContent: true
     }
   })

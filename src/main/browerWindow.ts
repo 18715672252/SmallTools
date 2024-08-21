@@ -14,7 +14,8 @@ class CustomerBrowerWindow {
       icon,
       webPreferences: {
         preload: join(__dirname, '../preload/index.js'),
-        sandbox: false
+        sandbox: false,
+        devTools: is.dev ? true : false
       }
     }
     this.options = { ...options, ...this.defaultOpt }
