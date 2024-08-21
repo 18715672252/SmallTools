@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: smalltools
+appId: com.sunchenglong.app
+productName: 小工具
 directories:
   buildResources: build
 files:
