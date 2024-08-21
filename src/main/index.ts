@@ -1,6 +1,6 @@
 import { app, shell, BrowserWindow, ipcMain, desktopCapturer } from 'electron'
 import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/appIcon.png?asset'
 import './ipcMain'
 function createWindow(): void {
@@ -56,7 +56,7 @@ function createWindow(): void {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron')
+  app.setAppUserModelId('小工具')
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
