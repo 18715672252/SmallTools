@@ -46,7 +46,9 @@ class CustomerBrowerWindow {
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
       this.win.loadURL(process.env['ELECTRON_RENDERER_URL'] + '/#/' + winUrl)
     } else {
-      this.win.loadFile(join(__dirname, '../renderer/index.html' + '/#/' + winUrl))
+      this.win.loadFile(join(__dirname, '../renderer/index.html'), {
+        hash: winUrl
+      })
     }
   }
 
