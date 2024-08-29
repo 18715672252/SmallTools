@@ -261,3 +261,7 @@ ipcMain.handle('restoreEvent', (ev) => {
 ipcMain.handle('ignoreEvent', (ev) => {
   BrowserWindow.fromWebContents(ev.sender)?.setIgnoreMouseEvents(true)
 })
+
+ipcMain.handle('copyColor', (_ev, data) => {
+  clipboard.writeText(data)
+})

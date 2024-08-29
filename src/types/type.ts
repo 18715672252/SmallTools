@@ -36,6 +36,7 @@ export type ipcMainEvent =
   | 'ignoreEvent'
   | 'restoreEvent'
   | 'codeCopy'
+  | 'copyColor'
 
 export type initStore = {
   recordStatus?: 'start' | 'progress' | 'end' | 'init'

@@ -21,9 +21,9 @@ const ReactScreenshots: FC = () => {
       window.api.sendIpcMain('ClearDesktopCapturer')
     })
   }, [])
-  const onCancel = useCallback(() => {
-    console.log('cancel')
-  }, [])
+  const onCancel = (): void => {
+    window.api.sendIpcMain('closeWin')
+  }
   const onOk = useCallback((blob: Blob) => {
     blob.arrayBuffer().then((bf) => {
       window.api.sendIpcMain('copyCapturerImg', { blob: bf })
@@ -35,11 +35,13 @@ const ReactScreenshots: FC = () => {
     domref.current!.onclick = (e): void => {
       // console.log(((e.target as HTMLElement).className.includes('screenshots-background-mask'))
       if ((e.target as HTMLElement).className.includes('screenshots-background-mask')) {
+        // window.api.sendIpcMain('closeWin')
+        const sel: NodeListOf<HTMLDivElement> = document.querySelectorAll(
+          '.screenshots-magnifier-footer-item'
+        )
+        window.api.sendIpcMain('copyColor', sel[1].innerHTML.substring(4))
         window.api.sendIpcMain('closeWin')
       }
-    }
-    domref.current!.onload = (): void => {
-      window.api.sendIpcMain('imgLinishLoad')
     }
   }, [])
   return (
