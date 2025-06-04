@@ -11,8 +11,9 @@ import {
   Notification
 } from 'electron'
 import CustomerBrowerWindow from './browerWindow'
-import icon from '../../resources/appIcon.png?asset'
+// import icon from '../../resources/appIcon.png?asset'
 import fs from 'fs'
+const icon = nativeImage.createFromPath('../../resources/appIcon.png')
 let desktopCapturerSize: undefined | Electron.Size
 let desktopCapturerWin
 let showDesktopCapturerWin
@@ -23,7 +24,6 @@ app.whenReady().then(() => {
   // const screenSize = screen.getPrimaryDisplay().size
   screenSize = screen.getPrimaryDisplay().bounds
   const scaleFactor = screen.getPrimaryDisplay().scaleFactor
-  console.log(screenSize)
   desktopCapturerSize = {
     width: screenSize.width * scaleFactor,
     height: screenSize.height * scaleFactor
@@ -39,13 +39,15 @@ ipcMain.handle('desktopCapturer', async () => {
   // 全屏图片的窗口
   desktopCapturerWin = new CustomerBrowerWindow(
     {
-      width: screenSize.width,
-      height: screenSize.height,
       fullscreen: true,
       frame: false,
       show: false,
-      transparent: true
-      // resizable: false
+      transparent: true,
+      skipTaskbar: true,
+      enableLargerThanScreen: true,
+      resizable: false,
+      movable: false,
+      autoHideMenuBar: true
     },
     'desktopCapturer'
   )
